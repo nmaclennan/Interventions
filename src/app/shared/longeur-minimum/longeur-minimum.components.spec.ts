@@ -24,13 +24,13 @@ describe('longeur zone Validator', () => {
     let control = { value: ' xx'.repeat(10) };
     let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
     let result = validatorFn(control as AbstractControl);
-    expect(result['nbreCaracteresInsuffisant']).toBe(true);
+    expect(result).toBeNull();
   });
   it('#11 | Une phrase avec 2 espaces et 1 caractère est invalide', () => {
     let control = { value: '  x'.repeat(3) };
     let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
     let result = validatorFn(control as AbstractControl);
-    expect(result['nbreCaracteresInsuffisant']).toBe(true);
+    expect(result).toBeNull();
   });
   it('#12 | Une phrase avec 3 espaces et 3 caractères est valide', () => {
     let control = { value: '   xxx'};
@@ -42,7 +42,7 @@ describe('longeur zone Validator', () => {
     let control = { value: '     xxxxx     '.repeat(20) };
     let validatorFn = VerifierCaracteresValidator.longueurMinimum(20);
     let result = validatorFn(control as AbstractControl);
-    expect(result['nbreCaracteresInsuffisant']).toBe(true);
+    expect(result).toBeNull();
   });
   it('#14 | Une chaîne nulle est invalide', () => {
     let control = {
@@ -50,6 +50,6 @@ describe('longeur zone Validator', () => {
     };
     let validatorFn = VerifierCaracteresValidator.longueurMinimum(1);
     let result = validatorFn(control as AbstractControl);
-    expect(result['chaineVide']).toBe(true);
+    expect(result).toBeTruthy();
   });
 });
