@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VerifierCaracteresValidator } from '../shared/longeur-minimum/longeur-minimum.components';
 import { TypeproblemeService } from './typeprobleme.service';
 import { ITypeProbleme } from './typeprobleme';
+import { emailMatcherValidator } from '../shared/email-matcher.component';
 
 @Component({
   selector: 'app-probleme',
@@ -69,7 +70,7 @@ export class ProblemeComponent implements OnInit {
     {
       if (etat === 'courriel') {
         courrielGroupControl.setValidators([
-        //  Validators.compose([emailMatcherValidator.courrielDifferents()]),
+        Validators.compose([emailMatcherValidator.courrielDifferents()]),
         ]);
         courrielControl.setValidators([
           Validators.required,
