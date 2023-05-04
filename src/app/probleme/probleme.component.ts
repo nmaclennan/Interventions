@@ -26,29 +26,39 @@ export class ProblemeComponent implements OnInit {
       ],
       nom: ['', [Validators.maxLength(50), Validators.required]],
       typeProbleme: ['', [Validators.required]],
-      noTypeProbleme: ['', Validators.required],
+      //noTypeProbleme: ['', Validators.required],
       courrielGroup: this.fb.group({
         courriel: [{ value: '', disabled: true }],
         courrielConfirmation: [{ value: '', disabled: true }],
       }),
       telephone: [{ value: '', disabled: true }],
+      notification: ['pasnotification'],
+      descriptionProbleme: ['', [Validators.required, Validators.minLength(5)]],
+      noUnite: '',
+      dateProbleme: { value: Date(), disabled: true },
     });
     this.typeproblemeService.obtenirTypesProbleme().subscribe(
       (typesProbleme) => (this.typesProbleme = typesProbleme),
       (error) => (this.errorMessage = <any>error)
     );
+
+    this.problemeForm
+      .get('notification')
+      .valueChanges.subscribe((value) => this.appliquerNotifications(value));
   }
   save(): void {}
 
   appliquerNotifications(etat: string): void {
     const courrielGroupControl = this.problemeForm.get('courrielGroup');
     const courrielControl = this.problemeForm.get('courrielGroup.courriel');
-    const courrielConfirmationControl = this.problemeForm.get('courrielGroup.courrielConfirmation');
-    const telephoneControl = this.problemeForm.get('telephone');           
+    const courrielConfirmationControl = this.problemeForm.get(
+      'courrielGroup.courrielConfirmation'
+    );
+    const telephoneControl = this.problemeForm.get('telephone');
     courrielControl.clearValidators();
-    courrielControl.reset(); 
+    courrielControl.reset();
     courrielControl.disable();
-    
+
     courrielConfirmationControl.clearValidators();
     courrielConfirmationControl.reset();
     courrielConfirmationControl.disable();
@@ -58,19 +68,17 @@ export class ProblemeComponent implements OnInit {
     telephoneControl.disable();
 
     if (etat === 'telephone') {
-       telephoneControl.setValidators([
-         Validators.required,
-         Validators.minLength(10),
-         Validators.maxLength(10),
-         Validators.pattern('[0-9]+'),
-       ]);
-       telephoneControl.enable();  
-    }
-    else
-    {
+      telephoneControl.setValidators([
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern('[0-9]+'),
+      ]);
+      telephoneControl.enable();
+    } else {
       if (etat === 'courriel') {
         courrielGroupControl.setValidators([
-        Validators.compose([emailMatcherValidator.courrielDifferents()]),
+          Validators.compose([emailMatcherValidator.courrielDifferents()]),
         ]);
         courrielControl.setValidators([
           Validators.required,
@@ -81,12 +89,11 @@ export class ProblemeComponent implements OnInit {
           Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+'),
         ]);
         courrielControl.enable();
-        courrielConfirmationControl.enable(); 
+        courrielConfirmationControl.enable();
       }
     }
     telephoneControl.updateValueAndValidity();
     courrielControl.updateValueAndValidity();
     courrielConfirmationControl.updateValueAndValidity();
   }
-  
 }
